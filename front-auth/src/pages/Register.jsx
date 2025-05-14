@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { Form, Button, Container, Card, Row, Col, Alert } from "react-bootstrap";
 
 const Register = () => {
@@ -9,6 +10,7 @@ const Register = () => {
   });
 
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -19,7 +21,6 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
 
     try {
       const response = await fetch("https://offers-api.digistos.com/api/auth/register", {
@@ -38,9 +39,10 @@ const Register = () => {
         throw err;
       }
 
-      window.location.href = "/connexion";
+      navigate("/connexion");
     } catch (error) {
-      setError(error.message);
+      console.log(error);
+      setError("Une erreur est survenue lors de l'inscription.");
     }
   };
 

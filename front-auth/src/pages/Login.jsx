@@ -3,19 +3,12 @@ import { useNavigate } from "react-router";
 import { Form, Button, Container, Card, Row, Col, Alert } from "react-bootstrap";
 
 const LoginPage = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -26,17 +19,23 @@ const LoginPage = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify(formData),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const data = await response.json();
         const err = new Error(data.message || "Erreur de connexion.");
         err.status = response.status;
         throw err;
       }
+
+      localStorage.setItem("auth", JSON.stringify({
+        token: data.access_token,
+        expiresAt: new Date(Date.now() + data.expires_in * 1000).toISOString(),
+      }));
 
       navigate("/offres/professionnelles");
     } catch (error) {
@@ -67,7 +66,6 @@ const LoginPage = () => {
                   required
                 />
               </Form.Group>
-
               <Form.Group className="mb-4" controlId="loginPassword">
                 <Form.Label>Mot de passe</Form.Label>
                 <Form.Control
@@ -78,7 +76,6 @@ const LoginPage = () => {
                   required
                 />
               </Form.Group>
-
               <Button variant="primary" type="submit" className="w-100">
                 Se connecter
               </Button>

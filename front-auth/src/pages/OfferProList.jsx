@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Spinner, Alert } from "react-bootstrap";
 import OfferList from "../components/OfferList.jsx";
 
@@ -12,19 +12,22 @@ const OfferProList = () => {
       try {
         const token = JSON.parse(localStorage.getItem("auth"))?.token;
 
-        const response = await fetch("https://offers-api.digistos.com/api/offers/pro", {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          "https://offers-api.digistos.com/api/offers/pro",
+          {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-        const data = await response.json();
+        const { data: offers, message } = await response.json();
         if (!response.ok) {
-          throw { status: response.status, message: data.message };
+          throw { status: response.status, message: message };
         }
 
-        setOffers(data);
+        setOffers(offers);
       } catch (err) {
         if (err.status === 401) {
           setError("Vous n'êtes pas autorisé à accéder aux offres (401).");

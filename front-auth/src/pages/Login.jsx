@@ -33,15 +33,19 @@ const LoginPage = () => {
 
       if (!response.ok) {
         const data = await response.json();
-        const err = new Error(data.message || "Une erreur est survenue lors de la connexion.");
+        const err = new Error(data.message || "Erreur de connexion.");
         err.status = response.status;
         throw err;
       }
 
-      navigate("/pro-offers");
+      navigate("/offres/professionnelles");
     } catch (error) {
       console.log(error);
-      setError("Identifians invalides ou erreur de connexion.");
+      if (error.status === 401) {
+        setError("Email ou mot de passe incorrect.");
+      } else {
+        setError("Une erreur est survenue lors de la connexion.");
+      }
     }
   };
 

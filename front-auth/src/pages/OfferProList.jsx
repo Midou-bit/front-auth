@@ -24,7 +24,7 @@ const OfferProList = () => {
 
         const { data: offers, message } = await response.json();
         if (!response.ok) {
-          throw { status: response.status, message: message };
+          throw { status: response.status, message };
         }
 
         setOffers(offers);

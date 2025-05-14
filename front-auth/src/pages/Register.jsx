@@ -17,13 +17,18 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch("https://offers-api.digistos.com/api/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    try {
+      await fetch("https://offers-api.digistos.com/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

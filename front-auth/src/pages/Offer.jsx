@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Container, Card, Spinner, Alert } from "react-bootstrap";
-import { useSelector } from "react-redux";
 
 const Offer = () => {
   const { id } = useParams();
   const [offer, setOffer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
     const fetchOffer = async () => {
@@ -18,8 +16,8 @@ const Offer = () => {
           {
             headers: {
               Accept: "application/json",
-              Authorization: `Bearer ${token}`,
             },
+            credentials: "include",
           }
         );
 
@@ -43,7 +41,7 @@ const Offer = () => {
     };
 
     fetchOffer();
-  }, [id, token]);
+  }, [id]);
 
   if (loading)
     return <Spinner animation="border" className="d-block mx-auto mt-5" />;

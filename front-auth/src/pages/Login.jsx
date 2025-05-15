@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../store/authSlice.js";
 import { Form, Button, Container, Card, Row, Col, Alert } from "react-bootstrap";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -32,10 +35,12 @@ const LoginPage = () => {
         throw err;
       }
 
-      localStorage.setItem("auth", JSON.stringify({
-        token: data.access_token,
-        expiresAt: new Date(Date.now() + data.expires_in * 1000).toISOString(),
-      }));
+      dispatch(
+        loginSuccess({
+          token: data.access_token,
+          expiresAt: new Date(Date.now() + data.expires_in * 1000).toISOString(),
+        })
+      );
 
       navigate("/offres/professionnelles");
     } catch (error) {

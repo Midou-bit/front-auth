@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../store/authSlice.js";
 
 const Logout = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
     const handleLogout = async () => {
-      const token = JSON.parse(localStorage.getItem("auth"))?.token;
       try {
         await fetch("https://offers-api.digistos.com/api/auth/logout", {
           method: "POST",
@@ -18,12 +21,12 @@ const Logout = () => {
         console.error(err);
       }
 
-      localStorage.removeItem("auth");
+      dispatch(logout());
       navigate("/connexion");
     };
 
     handleLogout();
-  }, [navigate]);
+  }, [dispatch, navigate, token]);
 
   return null;
 };
